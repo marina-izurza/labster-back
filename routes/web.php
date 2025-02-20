@@ -4,10 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\AdminController;
 
-// User
-Route::post('/message', [MessageController::class, 'sendMessage']);
+// Usuario envía mensaje y obtiene mensajes procesados (para notificar al usuario si se requiere)
+Route::post('/message', [MessageController::class, 'store']);
+Route::get('/messages', [MessageController::class, 'index']);
 
-Route::get('/messages', [MessageController::class, 'getMessages']);
-
-// Admin
-Route::post('/validate', [AdminController::class, 'validateMessage']);
+// Interfaz de Administración en Laravel
+Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+Route::post('/admin/validate', [AdminController::class, 'completeMessage'])->name('admin.validate');

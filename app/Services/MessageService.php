@@ -25,8 +25,8 @@ class MessageService
         if (!$allMessages) {
             $allMessages = [];
         }
-        $allMessages[$id] = $messages[$id];  // Agregar el mensaje
-        Cache::put('messages', $allMessages, 60); // Actualiza el caché global
+        $allMessages[$id] = $messages[$id]; 
+        Cache::put('messages', $allMessages, 60); 
     
         
         Cache::put("messages_{$userToken}", $messages, 60);
