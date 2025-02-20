@@ -25,11 +25,9 @@ class MessageController extends Controller
         return response()->json(['id' => $messageId, 'message'=> $message, 'status' => 'pending']);
     }
     
-
-    // FUNCIONA
-    public function getMessagesStatus($userToken)
+    public function getMessages(Request $request)
     {
-        $messages = Cache::get("messages_{$userToken}", []);
+        $messages = Cache::get('messages', []);
         return response()->json(array_values($messages));
     }
 }

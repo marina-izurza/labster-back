@@ -1,30 +1,30 @@
 <?php
 
+// AdminController.php
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Services\MessageService;
+use Illuminate\Support\Facades\Cache;
 
 class AdminController extends Controller
 {
-    private $service;
-
-    public function __construct(MessageService $service)
+    public function getMessages(Request $request)
     {
-        $this->service = $service;
+        $messages = Cache::get('messages', []);
+        return response()->json(array_values($messages));
     }
+    
 
-    public function getPendingMessages()
+    public function validateMessage(Request $request, $id)
     {
-        return response()->json($this->service->getPendingMessages());
-    }
+        $messages = Cache::get('messages', []);
 
-    public function completeMessage($id)
-    {
-        if ($this->service->completeMessage($id)) {
-            return response()->json(['message' => 'Message marked as completed']);
+        if (isset($messages[$id])) {
+            $messages[$id]['status'] = 'completed';
+            Cache::put('messages', $messages, 60);
+            return response()->json(['message' => 'Message validated successfully.']);
         }
 
-        return response()->json(['error' => 'Message not found'], 404);
+        return response()->json(['message' => 'Message not found.'], 404);
     }
 }
