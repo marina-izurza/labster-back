@@ -15,16 +15,18 @@ class AdminController extends Controller
     }
     
 
-    public function validateMessage(Request $request, $id)
+    public function validateMessage(Request $request)
     {
         $messages = Cache::get('messages', []);
-
-        if (isset($messages[$id])) {
-            $messages[$id]['status'] = 'completed';
+        $messageId = $request->input('messageId'); 
+    
+        if (isset($messages[$messageId])) { 
+            $messages[$messageId]['status'] = 'completed';
             Cache::put('messages', $messages, 60);
             return response()->json(['message' => 'Message validated successfully.']);
         }
-
+    
         return response()->json(['message' => 'Message not found.'], 404);
     }
+    
 }
