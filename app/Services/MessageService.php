@@ -9,24 +9,27 @@ class MessageService
     public function addMessage($userToken, $message)
     {
         $id = uniqid();
-        $delay = rand(5, 30); // Simula tiempo de procesamiento
-        $completionTime = time() + $delay;
-
-        // Obtener mensajes en caché
+        $delay = rand(0, 30); // Simula tiempo de procesamiento
+    
         $messages = Cache::get("messages_{$userToken}", []);
-
-        // Guardar mensaje en estado "pending"
+    
         $messages[$id] = [
             'id' => $id,
             'content' => $message,
-            'status' => 'pending',
-            'completion_time' => $completionTime
+            'status' => 'pending'
         ];
-
-        Cache::put("messages_{$userToken}", $messages, 60); // Cache por 60 min
-
+    
+        Cache::put("messages_{$userToken}", $messages, 60);
+    
+        // Simular el cambio de estado a "completed" después del delay
+        sleep($delay);
+    
+        $messages[$id]['status'] = 'completed';
+        Cache::put("messages_{$userToken}", $messages, 60);
+    
         return $id;
     }
+    
 
     public function getCompletedMessages($userToken)
     {

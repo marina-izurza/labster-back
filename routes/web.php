@@ -7,8 +7,11 @@ use App\Http\Controllers\AdminController;
 // Usuario envía mensaje
 Route::post('/message', [MessageController::class, 'sendMessage']);
 
-// Usuario consulta mensajes completados (polling)
-Route::get('/messages', [MessageController::class, 'getMessages']);
+// FUNCIONA - Me da todos los mensajes "pending" de un usuario 
+Route::get('/messages/{userToken}', [MessageController::class, 'getMessagesStatus']);
+
+
+
 
 // Administrador ve mensajes en proceso
 Route::get('/admin/messages', [AdminController::class, 'getPendingMessages']);

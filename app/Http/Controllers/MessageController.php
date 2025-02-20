@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\MessageService;
+use Illuminate\Support\Facades\Cache;
 
 class MessageController extends Controller
 {
@@ -21,17 +22,14 @@ class MessageController extends Controller
 
         $messageId = $this->service->addMessage($userToken, $message);
 
-        return response()->json(['id' => $messageId, 'status' => 'pending']);
+        return response()->json(['id' => $messageId, 'message'=> $message, 'status' => 'pending']);
     }
+    
 
-    public function getMessages(Request $request)
+    // FUNCIONA
+    public function getMessagesStatus($userToken)
     {
-        $userToken = $request->header('User-Token');
-
-        if (!$userToken) return response()->json(['error' => 'User token is required'], 400);
-
-        $messages = $this->service->getCompletedMessages($userToken);
-
-        return response()->json($messages);
+        $messages = Cache::get("messages_{$userToken}", []);
+        return response()->json(array_values($messages));
     }
 }
