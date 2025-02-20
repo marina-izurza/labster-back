@@ -10,25 +10,30 @@ class MessageController extends Controller
 {
     public function store(Request $request)
     {
-        // Crear un ID único para el mensaje
         $messageId = uniqid('msg_', true);
-
-        // Guardar el mensaje en caché
-        Cache::put($messageId, [
+        
+        // Obtener mensajes existentes o inicializar array vacío
+        $messages = Cache::get('messages', []);
+        
+        // Guardar nuevo mensaje
+        $messages[$messageId] = [
+            'id' => $messageId,
             'message' => $request->input('message'),
             'status' => 'pending',
-        ], now()->addMinutes(10));
-
-        // Despachar el job para procesar el mensaje asíncronamente
+        ];
+        
+        // Guardar en caché
+        Cache::put('messages', $messages, now()->addMinutes(10));
+        
+        // Despachar el job asincrónico
         ProcessMessage::dispatch($messageId);
-
+        
         return response()->json(['id' => $messageId, 'status' => 'pending']);
     }
 
-    public function index(Request $request)
+    public function index()
     {
-        // Devolver el mensaje al usuario.
-        $messages = Cache::get('messages', []);
-        return response()->json(array_values($messages));
+        // Obtener todos los mensajes (pendientes y completados)
+        return response()->json(Cache::get('messages', []));
     }
 }

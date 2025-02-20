@@ -10,4 +10,5 @@ Route::get('/messages', [MessageController::class, 'index']);
 
 // Interfaz de Administración en Laravel
 Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
-Route::post('/admin/validate', [AdminController::class, 'completeMessage'])->name('admin.validate');
+
+Route::post('/complete-message', [AdminController::class, 'completeMessage'])->name('complete.message');

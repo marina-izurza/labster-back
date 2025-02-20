@@ -23,11 +23,12 @@ class ProcessMessage implements ShouldQueue
 
     public function handle()
     {
-        $message = Cache::get($this->messageId);
-
-        if ($message) {
-            $message['status'] = 'completed';
-            Cache::put($this->messageId, $message, now()->addMinutes(10));
+        sleep(rand(30, 120)); // Simular demora de 30s a 2min
+        
+        $messages = Cache::get('messages', []);
+        if (isset($messages[$this->messageId])) {
+            $messages[$this->messageId]['status'] = 'completed';
+            Cache::put('messages', $messages, now()->addMinutes(10));
         } else {
             Log::warning("Message not found in cache for ID: " . $this->messageId);
         }
