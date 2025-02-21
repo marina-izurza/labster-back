@@ -12,21 +12,18 @@ class MessageController extends Controller
     {
         $messageId = uniqid('msg_', true);
         
-        // Obtener mensajes existentes o inicializar array vacío
         $messages = Cache::get('messages', []);
         
-        // Guardar nuevo mensaje
         $messages[$messageId] = [
             'id' => $messageId,
             'message' => $request->input('message'),
             'status' => 'pending',
+            'created_at' => now()->toDateTimeString(),
         ];
         
-        // Guardar en caché
         Cache::put('messages', $messages, now()->addMinutes(10));
         
-        // Despachar el job asincrónico
-        ProcessMessage::dispatch($messageId);
+        //ProcessMessage::dispatch($messageId)->delay(now()->addSeconds(10));
         
         return response()->json(['id' => $messageId, 'status' => 'pending']);
     }
@@ -36,4 +33,10 @@ class MessageController extends Controller
         // Obtener todos los mensajes (pendientes y completados)
         return response()->json(Cache::get('messages', []));
     }
+
+    public function getMessages()
+{
+    return response()->json(Cache::get('messages', []));
+}
+
 }

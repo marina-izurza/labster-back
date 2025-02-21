@@ -9,9 +9,11 @@ class AdminController extends Controller
 {
     public function index()
     {
-        return array_values(array_filter(Cache::get('messages', []), function ($message) {
-            return $message['status'] === 'pending';
-        }));
+        $messages = Cache::get('messages', []);
+        
+        $pendingMessages = collect($messages)->where('status', 'pending')->values();
+        
+        return view('admin.index', ['messages' => $pendingMessages]);
     }
 
     public function completeMessage(Request $request)
