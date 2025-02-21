@@ -16,3 +16,6 @@ Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
 
 // Valida un mensaje
 Route::post('/complete-message', [AdminController::class, 'completeMessage'])->name('complete.message');
+
+// Eempieza a procesar
+Route::get('/start-processing', [MessageController::class, 'startProcessing']);

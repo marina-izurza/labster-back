@@ -9,6 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
 
+
 class ProcessMessage implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -25,8 +26,9 @@ class ProcessMessage implements ShouldQueue
         $messages = Cache::get('messages', []);
 
         if (isset($messages[$this->messageId]) && $messages[$this->messageId]['status'] === 'pending') {
-            $messages[$this->messageId]['status'] = 'pending';
-            sleep(rand(10, 20)); // retraso de 10 a 20 segundos
+
+            //sleep(rand(5, 10)); // retraso de 10 a 20 segundos
+            sleep(5);
 
             $messages[$this->messageId]['status'] = 'completed';
             Cache::put('messages', $messages);
