@@ -25,8 +25,20 @@ class MessageController extends Controller
 
         // lanzo el job - pero claro, pasa directamente a completado en el front
         // 1. puedo en el front cuando acabe esta petición hacer otra al job
-         ProcessMessage::dispatch($messageId);
 
+        register_shutdown_function(function () use ($messageId) {
+         //ProcessMessage::dispatch($messageId);
+         $messages = Cache::get('messages', []);
+
+         if (isset($messages[$messageId]) && $messages[$messageId]['status'] === 'pending') {
+ 
+             //sleep(rand(5, 10)); // retraso de 10 a 20 segundos
+             sleep(100);
+             $messages[$messageId]['status'] = 'completed';
+             Cache::put('messages', $messages);
+         }
+
+        });
         return response()->json(['id' => $messageId, 'status' => 'pending']);
     }
 
