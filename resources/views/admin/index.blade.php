@@ -11,7 +11,7 @@
                         <div>
                             <strong>ID:</strong> {{ $message['id'] }} <br>
                             <strong>Message:</strong> {{ $message['message'] }} <br>
-                            <strong>Status:</strong> <span class="badge bg-warning">{{ $message['status'] }}</span>
+                            <strong>Status:</strong> <span class="badge bg-warning">To be processed</span>
                         </div>
                         <form action="{{ route('complete.message') }}" method="POST" class="ml-2">
                             @csrf
@@ -27,8 +27,12 @@
         @endif
     </div>
 
+    <!-- Floating Refresh Button -->
+    <button id="refreshButton" class="btn btn-primary position-fixed bottom-3 end-3" onclick="location.reload()">
+        🔄 Refresh
+    </button>
+
     <style>
-        /* Animación para el mensaje completado */
         .fade-out {
             animation: fadeOut 1s forwards;
         }
@@ -42,20 +46,26 @@
                 transform: translateY(-20px);
             }
         }
+
+        #refreshButton {
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 50px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+        }
     </style>
 
     <script>
-        // Script para manejar la animación de eliminación
         document.querySelectorAll('.btn-success').forEach(button => {
             button.addEventListener('click', function(event) {
                 event.preventDefault();
                 const form = this.closest('form');
                 const listItem = this.closest('.list-group-item');
 
-                // Agregar clase de animación
                 listItem.classList.add('fade-out');
 
-                // Esperar a que termine la animación antes de enviar el formulario
                 listItem.addEventListener('animationend', () => {
                     form.submit();
                 });

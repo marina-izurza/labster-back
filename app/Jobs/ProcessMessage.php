@@ -27,8 +27,7 @@ class ProcessMessage implements ShouldQueue
 
         if (isset($messages[$this->messageId]) && $messages[$this->messageId]['status'] === 'pending') {
 
-            //sleep(rand(5, 10)); // retraso de 10 a 20 segundos
-            sleep(1);
+            sleep(rand(30, 90));
 
             $messages[$this->messageId]['status'] = 'completed';
             Cache::put('messages', $messages);

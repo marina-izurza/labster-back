@@ -23,11 +23,11 @@ class AdminController extends Controller
 
         if (isset($messages[$messageId])) {
             $messages[$messageId]['status'] = 'completed';
-            Cache::put('messages', $messages, now()->addMinutes(10));
-            return redirect()->route('admin.index')->with('status', 'Mensaje completado con éxito');
+            Cache::put('messages', $messages);
+            return redirect()->route('admin.index');
         }
 
-        return redirect()->route('admin.index')->with('error', 'Mensaje no encontrado');
+        return redirect()->route('admin.index');
     }
 
 }
